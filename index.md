@@ -1,5 +1,5 @@
 <h1>Fluency</h1>
-<a href="json.html">JSON</a><br>
+<a href="notepad.html">Notepad</a><br>
 <a href="ajax.html">AJAX</a><br>
 <a href="local.html">Local Storage</a><br>
 <a href="dom.html">DOM Document Object Model</a><br>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="main.css"/>
+  <script src="notepadScript.js"></script>
+</head>
+<body onload="notepadLoad();" class="dark-mode">
+    <div id="navOverlay" class="overlay">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&#9650;</a>
+        <div class="overlay-content">
+            <a href="javascript:void(0)" onclick="switchMode()" id="switchMode">Dark Mode</a>
+            <a href="javascript:void(0)" onclick="textUp()">Big Text</a>
+            <a href="javascript:void(0)" onclick="textNorm()">Normal Text</a>
+            <a href="javascript:void(0)" onclick="textDown()">Small Text</a>
+            <a href="javascript:void(0)" onclick="newFont()">Different Font</a>
+        </div>
+    </div>
+    <textarea id="notepadTextArea" class="notepad dark-mode"></textarea>
+    <div class="float-button">
+        <a href="javascript:void(0)" class="closebtn" onclick="openNav()">&#9660;</a>
+    </div>
+</body>
+</html>

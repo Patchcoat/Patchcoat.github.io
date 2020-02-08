@@ -1,0 +1,86 @@
+.notepad {
+    resize: none;
+    height: 99vh;
+    width: 100%;
+    padding: 0;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    font-family: monospace;
+    font-size: 2em;
+    position: relative;
+}
+
+.overlay {
+  height: 0%;
+  width: 25%;
+  min-width: 500px;
+  min-width: 0px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: rgb(30,30,30);
+  overflow: hidden;
+  transition: 0.5s;
+}
+
+.overlay-content {
+  position: relative;
+  top: 10%;
+  width: 100%;
+  text-align: center;
+  margin-top: 0px;
+}
+
+.overlay a {
+  padding: 0px 8px;
+  text-decoration: none;
+  font-size: 36px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.overlay a:hover, .overlay a:focus {
+  color: #f1f1f1;
+}
+
+.overlay .closebtn {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  font-size: 30px;
+}
+
+.float-button a {
+  color: #a1a1a1;
+  text-decoration: none;
+  position: fixed;
+  display: block;
+  right: 8px;
+  top: 0px;
+  font-size: 30px;
+}
+
+.float-button a:hover, .overlay a:focus {
+  color: #818181;
+}
+
+.light-mode {
+    color: #000;
+    background-color: #fff;
+}
+.dark-mode {
+    color: #AAA;
+    background-color: #000;
+}
+
+@media screen and (max-height: 450px) {
+  .overlay a {font-size: 20px}
+  .overlay .closebtn {
+  font-size: 40px;
+  top: 15px;
+  right: 35px;
+  }
+}

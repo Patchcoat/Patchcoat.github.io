@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<div id="message">
+  <h2 id="name"></h2>
+  <p id="content"></p>
+</div>
+<button type="button" onclick="loadDoc()">Get Message</button>
+<script>
+function loadDoc() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var message = JSON.parse(this.responseText);
+            document.getElementById("name").innerHTML = message.name;
+            document.getElementById("content").innerHTML = message.message;
+        }
+    };
+    xhttp.open("GET", "ajax.json", true);
+    xhttp.send();
+}
+</script>
+</body>
+</html>
