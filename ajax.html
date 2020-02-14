@@ -1,24 +1,58 @@
 <!DOCTYPE html>
 <html>
 <body>
-
-<div id="message">
-  <h2 id="name"></h2>
-  <p id="content"></p>
+    <h1>Quote of the day</h1>
+<div id="message" style="background-color: grey; width: auto; padding: 1em;">
+  <p id="quote"></p>
+  <h3 id="name"></h3>
 </div>
-<button type="button" onclick="loadDoc()">Get Message</button>
+<br>
+<button onclick="nextQuote();">Next Quote</button>
+<button onclick="saveQuote();">Save Quote</button>
+<h1>Saved Quote</h1>
+<div id="message" style="background-color: grey; width: auto; padding: 1em;">
+  <p id="save-quote"></p>
+  <h3 id="save-name"></h3>
+</div>
 <script>
-function loadDoc() {
+var quoteID = 0;
+var quoteList;
+function loadQuoteList() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            var message = JSON.parse(this.responseText);
-            document.getElementById("name").innerHTML = message.name;
-            document.getElementById("content").innerHTML = message.message;
+            quoteList = JSON.parse(this.responseText);
+            showQuote(quoteID);
         }
     };
     xhttp.open("GET", "ajax.json", true);
     xhttp.send();
+}
+loadQuoteList();
+showSavedQuote();
+function showQuote(num) {
+    document.getElementById("name").innerHTML =  quoteList[num].name;
+    document.getElementById("quote").innerHTML = quoteList[num].quote;
+}
+
+function nextQuote() {
+    quoteID++;
+    if (quoteID >= quoteList.length) {
+        quoteID = 0;
+    }
+    showQuote(quoteID);
+} 
+
+function showSavedQuote() {
+    savedQuote = JSON.parse(localStorage.getItem("saved-quote"));
+
+    document.getElementById("save-name").innerHTML =  savedQuote.name;
+    document.getElementById("save-quote").innerHTML = savedQuote.quote;
+}
+function saveQuote() {
+    console.log(JSON.stringify(quoteList[quoteID]));
+    localStorage.setItem("saved-quote", JSON.stringify(quoteList[quoteID]));
+    showSavedQuote();
 }
 </script>
 </body>
