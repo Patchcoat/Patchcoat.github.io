@@ -1,0 +1,170 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="main.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    </head>
+<body onload="loadSaved();">
+<div class="container">
+    <h1>Stock Tracker</h1>
+    <form id="searchForm">
+        <label for="search">Search for a Stock Ticket Symbol</label><br>
+        <input type="text" id="search" name="search"></input>
+        <input class="btn btn-primary" type="button" value="Search" onclick="loadStock(showProfile);">
+    </form>
+    <div id="loading-stock" class="loading" style="display: none;">loading...</div>
+    <div id="content">
+    </div>
+    <button class="btn btn-primary" onclick="addToTracker();">Add to Tracker</button>
+    <button class="btn btn-danger" onclick="clearStorage()">Delete All Trackers</button>
+    <div id="loading-stocks" class="loading" style="display: none;">loading...</div>
+    <div id="stocks">
+    </div>
+</div>
+<script>
+var stockList = [];
+var stocksRemaining = 0;
+var stockBuffer = "";
+function createElement(tag, contents) {
+    var element = document.createElement(tag);
+    var content = document.createTextNode(contents);
+    element.appendChild(content);
+
+    return element;
+}
+function createStockElement(stock, inStocks=false) {
+    var info = JSON.parse(stock);
+    var stockElement = document.createElement("div");
+    if (inStocks) {
+        stockElement.setAttribute("id", info.symbol);
+    }
+    stockElement.setAttribute("class", "stock-element add-stock row");
+    var row1 = document.createElement("div");
+    row1.setAttribute("class", "col-3");
+    var row2 = document.createElement("div");
+    row2.setAttribute("class", "col-sm");
+    var header = createElement("h2",info.profile.companyName+" ("+info.symbol+")");
+    var subHeader = createElement("h3","Price: $"+info.profile.price);
+    var button = createElement("button","Remove from Tracker");
+    var changePer = createElement("h3",info.profile.changesPercentage);
+    if (info.profile.changesPercentage.charAt(1) == "+") {
+        changePer.setAttribute("class", "positive-change");
+    } else {
+        changePer.setAttribute("class", "negative-change");
+    }
+    var link = createElement("a","Company Website");
+    link.setAttribute("class","company-link");
+    link.setAttribute("href",info.profile.website);
+    button.setAttribute("class", "btn btn-danger");
+    button.setAttribute("onclick", "stopTracking(\""+info.symbol+"\");");
+    row1.appendChild(header);
+    row1.appendChild(subHeader);
+    if (inStocks) {
+        row1.appendChild(button);
+    }
+    row2.appendChild(link);
+    row2.insertBefore(changePer, row2.childNodes[0]);
+    stockElement.appendChild(row1);
+    stockElement.appendChild(row2);
+
+    return stockElement;
+}
+
+function addStock(stock) {
+    stockElement = createStockElement(stock, true);
+    var stocksDiv = document.getElementById("stocks");
+    stocksDiv.appendChild(stockElement);
+}
+
+function loadSaved() {
+    savedStocks = localStorage.getItem("saved-stocks")
+    stockList = JSON.parse(savedStocks);
+    if (stocks) {
+        stocksRemaining = stockList.length;
+        if (stockList.length > 0) {
+            document.getElementById("loading-stocks").style.display = "block";
+        }
+        for (var i = 0; i < stockList.length; i++) {
+            loadStock(addStock, stockList[i]);
+        }
+    }
+}
+
+function saveStock() {
+    localStorage.setItem("saved-stocks", JSON.stringify(stockList));
+}
+
+function loadStock(loadFun, stock = document.getElementById("search").value) {
+    if (loadFun == showProfile) {
+        document.getElementById("loading-stock").style.display = "block";
+    }
+    stock = stock.toUpperCase();
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200) {
+            loadFun(this.responseText);
+            if (loadFun == addStock) {
+                if (--stocksRemaining == 0) {
+                    document.getElementById("loading-stocks").style.display = "none";
+                }
+            } else if (loadFun == showProfile) {
+                document.getElementById("loading-stock").style.display = "none";
+            }
+        }
+        if(this.readyState == 4 && this.status == 404) {
+            document.getElementById("content").innerHTML = "ERROR: please enter a stock ticker symbol";
+            if (loadFun == showProfile) {
+                document.getElementById("loading-stock").style.display = "none";
+            }
+        }
+    };
+    xhttp.open("GET", "https://financialmodelingprep.com/api/v3/company/profile/"+stock, true);
+    xhttp.send();
+}
+
+function showProfile(stock) {
+    stockBuffer = stock;
+    if (stock == "{ }") {
+        document.getElementById("content").innerHTML = "No such ticker symbol exists by that name";
+    } else {
+        stockElement = createStockElement(stock);
+        
+        var stocksDiv = document.getElementById("content");
+        stocksDiv.removeChild(stocksDiv.childNodes[0]);
+        stocksDiv.appendChild(stockElement);
+    }
+}
+
+function addToTracker() {
+    var symbol = JSON.parse(stockBuffer).symbol;
+    if (symbol != undefined && !stockList.includes(symbol)) {
+        addStock(stockBuffer);
+        stockList.push(symbol);
+        saveStock();
+    } else {
+    }
+}
+
+function stopTracking(symbol) {
+    var stock = document.getElementById(symbol);
+    stock.classList.remove("add-stock");
+    stock.classList.add("remove-stock");
+    setTimeout(function () {
+        stock.parentNode.removeChild(stock);
+        stockList.splice(symbol, 1);
+        saveStock();
+    }, 999);
+}
+
+function clearStorage() {
+    localStorage.setItem("saved-stocks","[]");
+    window.location.reload(false);
+}
+
+var form=document.getElementById("searchForm");
+function handleForm(event) {event.preventDefault(); }
+form.addEventListener('submit', handleForm);
+
+</script>
+</body>
+</html>

@@ -1,3 +1,63 @@
+.loading {
+    opacity: 1;
+    animation-name: load;
+    animation-duration: 0.5s;
+    animation-iteration-count: infinite;
+}
+.stock-element{
+    transform: translate(0px);
+    transition: transform 0.5s;
+}
+.stock-element:hover{
+    transform: translate(-50px);
+}
+.add-stock{
+    animation-name: addStock;
+    animation-duration: 1s;
+}
+.remove-stock{
+    animation-name: removeStock;
+    animation-duration: 1s;
+}
+
+@keyframes load {
+    0% {opacity: 1;}
+    50% {opacity: 0.2;}
+    100% {opacity: 1;}
+}
+@keyframes addStock {
+    0% {opacity: 0; transform: translateX(300px);}
+    100% {opacity: 1; transform: translateX(0px);}
+}
+@keyframes removeStock{
+    0% {opacity: 1; transform: translateX(0px);}
+    100% {opacity: 0; transform: translateX(300px);}
+}
+
+.positive-change {
+    color: green;
+}
+.negative-change {
+    color: red;
+}
+
+.company-link {
+    color: grey;
+    text-decoration: none;
+}
+.company-link:visited {
+    color: grey;
+    text-decoration: underline;
+}
+.company-link:hover {
+    color: black;
+    text-decoration: underline;
+}
+.company-link:active{
+    color: grey;
+    text-decoration: underline;
+}
+
 .notepad {
     resize: none;
     height: 99vh;
