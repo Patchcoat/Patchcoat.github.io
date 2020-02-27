@@ -1,0 +1,125 @@
+var canvas = document.getElementById("visualCanvas");
+var context = canvas.getContext("2d");
+
+var imagew = canvas.width;
+var imageh = canvas.height;
+
+var imagedata = context.createImageData(imagew, imageh);
+
+var maxiterations = 250;
+
+var palette = [];
+
+function generatePalette(time) {
+    var roffset = 24;
+    var goffset = 16;
+    // 144 BPM
+    var boffset = (Math.sin(time)+1)*20;
+    for (var i = 0; i<256; i++) {
+        palette[i] = {r:roffset, g:goffset, b:boffset};
+
+        if (i < 64) {
+            roffset += (Math.sin(time)+1)*2;
+        } else if (i<(Math.sin(time)+1)*127) {
+            goffset += (Math.sin(time)+1)*2;
+        } else if (i<(Math.sin(time)+1)*191) {
+            boffset += (Math.sin(time)+1)*2;
+        }
+    }
+}
+
+var offsetx = -imagew/2;
+var offsety = -imageh/2;
+var panx = -100;
+var pany = 0;
+var zoom = 150;
+
+document.addEventListener('keydown', function(event) {
+    if(event.keyCode == 37) {
+        //left
+        panx -= 100;
+    } else if(event.keyCode == 38) {
+        //up
+        pany -= 100;
+    } else if(event.keyCode == 39) {
+        //right
+        panx += 100;
+    } else if(event.keyCode == 40) {
+        //down
+        pany += 100;
+    } else if(event.keyCode == 17) {
+        //ctrl
+        zoom += 100;
+    }
+    console.log("x:"+panx+"y:"+pany+"zoom:"+zoom);
+});
+
+function iterate(x, y, maxiterations) {
+    var x0 = (x + offsetx + panx) / zoom;
+    var y0 = (y + offsety + pany) / zoom;
+
+    var a = 0;
+    var b = 0;
+    var rx = 0;
+    var ry = 0;
+
+    var iterations = 0;
+    while (iterations < maxiterations && (rx * rx + ry * ry <= 4)) {
+        rx = a * a - b * b + x0;
+        ry = 2 * a * b + y0;
+
+        a = rx;
+        b = ry;
+        iterations++;
+    }
+
+    var color;
+    if (iterations == maxiterations) {
+        color = { r:0, g:0, b:0};
+    } else {
+        var index = Math.floor((iterations / (maxiterations-1)) * 255);
+        color = palette[index];
+    }
+    
+
+    var pixelindex = (y * imagew + x) * 4;
+    imagedata.data[pixelindex] = color.r;
+    imagedata.data[pixelindex+1] = color.g;
+    imagedata.data[pixelindex+2] = color.b;
+    imagedata.data[pixelindex+3] = 255;
+}
+
+function generateImage() {
+    //iterate over the pixels
+    for (var y = 0; y<imageh; y++) {
+        for (var x=0; x<imagew; x++) {
+            iterate(x, y, maxiterations);
+        }
+    }
+    context.putImageData(imagedata, 0, 0);
+}
+
+var playing = false;
+
+var sng = document.getElementById("song");
+sng.onplay = function() {
+    playing = true;
+};
+sng.onpause = function() {
+    playing = false;
+    console.log(sng.currentTime);
+};
+
+
+setInterval(function() {
+if (playing) {
+    generatePalette(sng.currentTime);
+    generateImage();
+}
+if (sng.currentTime > 26.8) {
+    zoom = 170+((sng.currentTime-26.8)*50.14);
+    panx = (sng.currentTime-26.8)*18.26-100;
+    pany = (sng.currentTime-26.8)*-32.5;
+    console.log("panx: "+panx+" pany: "+pany);
+}
+}, 16);

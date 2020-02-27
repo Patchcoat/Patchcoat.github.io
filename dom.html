@@ -77,9 +77,9 @@ function addStock(stock) {
 }
 
 function loadSaved() {
-    savedStocks = localStorage.getItem("saved-stocks")
+    savedStocks = localStorage.getItem("saved-stocks");
     stockList = JSON.parse(savedStocks);
-    if (stocks) {
+    if (stockList) {
         stocksRemaining = stockList.length;
         if (stockList.length > 0) {
             document.getElementById("loading-stocks").style.display = "block";

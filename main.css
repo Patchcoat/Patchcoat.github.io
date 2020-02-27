@@ -9,7 +9,7 @@
     transition: transform 0.5s;
 }
 .stock-element:hover{
-    transform: translate(-50px);
+    transform: translate(-20px);
 }
 .add-stock{
     animation-name: addStock;
