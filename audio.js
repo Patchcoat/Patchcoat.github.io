@@ -11,7 +11,6 @@ var maxiterations = 250;
 var palette = {p:[], gen:function(time) {
     var roffset = 24;
     var goffset = 16;
-    // 144 BPM
     var boffset = (Math.sin(time)+1)*20;
     var color = {r:roffset, g:goffset, b:boffset};
     for (var i = 0; i<256; i++) {
