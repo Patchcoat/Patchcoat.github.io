@@ -28,26 +28,6 @@ var palette = {p:[], gen:function(time) {
     }
 }};
 
-/*function generatePalette(time) {
-    var roffset = 24;
-    var goffset = 16;
-    // 144 BPM
-    var boffset = (Math.sin(time)+1)*20;
-    var color = {r:roffset, g:goffset, b:boffset};
-    for (var i = 0; i<256; i++) {
-        palette[i] = color;
-
-        if (i < 64) {
-            roffset += (Math.sin(time)+1)*2;
-        } else if (i<(Math.sin(time)+1)*127) {
-            goffset += (Math.sin(time)+1)*2;
-        } else if (i<(Math.sin(time)+1)*191) {
-            boffset += (Math.sin(time)+1)*2;
-        }
-        color = {r:roffset, g:goffset, b:boffset};
-    }
-}*/
-
 var offsetx = -imagew/2;
 var offsety = -imageh/2;
 var panx = -100;
@@ -90,7 +70,6 @@ function iterate(x, y, maxiterations) {
 }
 
 function generateImage() {
-    //iterate over the pixels
     for (var y = 0; y<imageh; y++) {
         for (var x=0; x<imagew; x++) {
             iterate(x, y, maxiterations);
