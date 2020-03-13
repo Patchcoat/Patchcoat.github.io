@@ -8,7 +8,9 @@ var imagedata = context.createImageData(imagew, imageh);
 
 var maxiterations = 250;
 
-var palette = {p:[], gen:function(time) {
+var palette = new Object();
+palette.p = []
+palette.gen = function(time) {
     var roffset = 24;
     var goffset = 16;
     var boffset = (Math.sin(time)+1)*20;
@@ -25,17 +27,20 @@ var palette = {p:[], gen:function(time) {
         }
         color = {r:roffset, g:goffset, b:boffset};
     }
-}};
+};
 
-var offsetx = -imagew/2;
-var offsety = -imageh/2;
-var panx = -100;
-var pany = 0;
+function Vec2(vecx, vecy) {
+    this.x = vecx;
+    this.y = vecy;
+}
+
+var offset = new Vec2(-imagew/2, -imageh/2);
+var pan = new Vec2(-100, 0);
 var zoom = 150;
 
 function iterate(x, y, maxiterations) {
-    var x0 = (x + offsetx + panx) / zoom;
-    var y0 = (y + offsety + pany) / zoom;
+    var x0 = (x + offset.x + pan.x) / zoom;
+    var y0 = (y + offset.y + pan.y) / zoom;
 
     var a = 0;
     var b = 0;
@@ -97,7 +102,7 @@ if (playing) {
 }
 if (sng.currentTime > 26.8) {
     zoom = 170+((sng.currentTime-26.8)**1.62808737);
-    panx = (sng.currentTime-26.8)**1.46606828-100;
-    pany = ((sng.currentTime-26.8)**1.55854153644)*-1;
+    pan.x = (sng.currentTime-26.8)**1.46606828-100;
+    pan.y = ((sng.currentTime-26.8)**1.55854153644)*-1;
 }
 }, 16);
