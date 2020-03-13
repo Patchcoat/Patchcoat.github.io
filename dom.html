@@ -137,7 +137,7 @@ function loadStock(loadFun, stock = document.getElementById("search").value) {
 
 function addToTracker() {
     var symbol = JSON.parse(stockBuffer).symbol;
-    if (symbol != undefined && stockList != null && !stockList.includes(symbol)) {
+    if (symbol != undefined && (stockList == null || !stockList.includes(symbol))) {
         addStock(stockBuffer);
         stockList.push(symbol);
         saveStock();
