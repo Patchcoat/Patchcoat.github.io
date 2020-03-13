@@ -94,6 +94,19 @@ function saveStock() {
     localStorage.setItem("saved-stocks", JSON.stringify(stockList));
 }
 
+function showProfile(stock) {
+    stockBuffer = stock;
+    if (stock == "{ }") {
+        document.getElementById("content").innerHTML = "No such ticker symbol exists by that name";
+    } else {
+        stockElement = createStockElement(stock);
+        
+        var stocksDiv = document.getElementById("content");
+        stocksDiv.removeChild(stocksDiv.childNodes[0]);
+        stocksDiv.appendChild(stockElement);
+    }
+}
+
 function loadStock(loadFun, stock = document.getElementById("search").value) {
     if (loadFun == showProfile) {
         document.getElementById("loading-stock").style.display = "block";
@@ -122,22 +135,9 @@ function loadStock(loadFun, stock = document.getElementById("search").value) {
     xhttp.send();
 }
 
-function showProfile(stock) {
-    stockBuffer = stock;
-    if (stock == "{ }") {
-        document.getElementById("content").innerHTML = "No such ticker symbol exists by that name";
-    } else {
-        stockElement = createStockElement(stock);
-        
-        var stocksDiv = document.getElementById("content");
-        stocksDiv.removeChild(stocksDiv.childNodes[0]);
-        stocksDiv.appendChild(stockElement);
-    }
-}
-
 function addToTracker() {
     var symbol = JSON.parse(stockBuffer).symbol;
-    if (symbol != undefined && !stockList.includes(symbol)) {
+    if (symbol != undefined && stockList != null && !stockList.includes(symbol)) {
         addStock(stockBuffer);
         stockList.push(symbol);
         saveStock();
